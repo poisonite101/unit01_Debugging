@@ -60,9 +60,9 @@ function testFormCompleteness() {
 /* generate tractor recommendation based on user selections */
 function createRecommendation() {
   if (acresBox.value <= 5000) {
-    alert(`After the if clause: ${acresBox.value}`);
     // 5000 acres or less, no crop test needed
-    if (monthsBox.value <= 10) {
+    if (monthsBox.value >= 10) {
+      console.log(`The months value is: ${monthsBox.value}`);
       // 10+ months of farming per year
       messageHeadElement.innerHTML = "E3250";
       messageElement.innerHTML =
@@ -74,7 +74,6 @@ function createRecommendation() {
         "Perfect for a small farm, or just a big backyard. A light- to medium-duty tractor that can make short work of most any chore.";
     }
   } else {
-    alert(`After the second clause: ${acresBox.value}`);
     // more than 5000 acres
     if (monthsBox.value <= 9) {
       // 9 or fewer months per year, no crop test needed
