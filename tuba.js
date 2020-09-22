@@ -4,16 +4,17 @@
  *    Tuba Farm Equipment
  *    Variables and functions
  *    
- *    Author: 
- *    Date:   
+ *    Author: Zac Ingoglia
+ *    Date:   09-16-2020
 
  *    Filename: tuba.js
  */
+"use strict";
 
 /* global variables tracking status of each form section */
-var acresComplete = true;
-var cropsComplete = true;
-var monthsComplete = true;
+var acresComplete = false;
+var cropsComplete = false;
+var monthsComplete = false;
 var fuelComplete = true;
 
 /* global variables referencing sidebar h2 and p elements */
@@ -32,17 +33,62 @@ var acresBox = document.forms[0].acres;
 
 /* verify acres text box entry is a positive number */
 function verifyAcres() {
-  testFormCompleteness();
+  try {
+    if (document.querySelectorAll("#acres")[0].value > 0) {
+      acresComplete = true;
+      messageElement.innerHTML = "";
+      testFormCompleteness();
+    }
+    if (document.querySelectorAll("#acres")[0].value <= 0) {
+      throw "Please choose a farm size greater than 0 acres.";
+    }
+  } catch (message) {
+    acresComplete = false;
+    messageHeadElement.innerHTML = "";
+    messageElement.innerHTML = message;
+  }
 }
 
 /* verify at least one crops checkbox is checked */
 function verifyCrops() {
-  testFormCompleteness();
+  try {
+    for (var i = 0; i < 7; i++) {
+      if (document.querySelectorAll(".crops")[i].checked) {
+        cropsComplete = true;
+        messageElement.innerHTML = "";
+        testFormCompleteness();
+        i = 8;
+      }
+    }
+    if (i === 7) {
+      throw "Please select at least one crop.";
+    }
+  } catch (message) {
+    cropsComplete = false;
+    messageHeadElement.innerHTML = "";
+    messageElement.innerHTML = message;
+  }
 }
 
 /* verify months text box entry is between 1 and 12 */
 function verifyMonths() {
-  testFormCompleteness();
+  try {
+    if (
+      document.querySelectorAll("#months")[0].value > 0 &&
+      document.querySelectorAll("#months")[0].value < 13
+    ) {
+      monthsComplete = true;
+      messageElement.innerHTML = "";
+      testFormCompleteness();
+    }
+    if (document.querySelectorAll("#months")[0].value <= 0) {
+      throw "Please choose a valid number of months.";
+    }
+  } catch (message) {
+    monthsComplete = false;
+    messageHeadElement.innerHTML = "";
+    messageElement.innerHTML = message;
+  }
 }
 
 /* verify that a fuel option button is selected */
@@ -61,8 +107,7 @@ function testFormCompleteness() {
 function createRecommendation() {
   if (acresBox.value <= 5000) {
     // 5000 acres or less, no crop test needed
-    if (monthsBox.value >= 10) {
-      console.log(`The months value is: ${monthsBox.value}`);
+    if (monthsBox.value <= 10) {
       // 10+ months of farming per year
       messageHeadElement.innerHTML = "E3250";
       messageElement.innerHTML =
